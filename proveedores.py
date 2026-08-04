@@ -6,79 +6,87 @@ class Proveedor:
         self.nombre_proveedor = nombre_proveedor
 
 class GestorProveedores:
-    # Variables Globales
+    # * Variables Globales
     id_proveedor = 1
 
     def __init__(self):
-        # Lista de proveedores
         self.lista_proveedores = []
 
+    def _buscar_posicion(self, id):
+        # * Obtener el indice de lista proveedores
+        for i in range(len(self.lista_proveedores)):
+            if self.lista_proveedores[i]["id"] == id:
+                return i
+        return -1
+
     # -----------------------
-    # CRUD de Proveedores
+    # * CRUD de Proveedores
     # -----------------------
     def crear_proveedor(self, proveedor: Proveedor):
         if bool(self.lista_proveedores):
-            # Obtener último ID de la lista
-            lista_proveedores = self.lista_proveedores[::-1]
-            ultimo_id = lista_proveedores[0]["id"]
-            # Aumentando el valor de ID
-            ultimo_id += 1
+            lista_invertida = self.lista_proveedores[::-1]
+            ultimo_id = lista_invertida[0]["id"]
+            ultimo_id += 1 # * Aumentando el valor de ID
 
             proveedor = {"id": ultimo_id, "nombre_proveedor": proveedor.nombre_proveedor}
             self.lista_proveedores.append(proveedor)
-            print(f"{c.GREEN}[+] Proveedor creado correctamente!{c.END} - {ultimo_id}\n")
+            print(f"{c.GREEN}[+] Proveedor creado{c.END} - {ultimo_id}\n")
             sleep(0.5)
         else: 
             print(f"\n{c.GREEN}[+]{c.END} {c.GRAY}Inicializando lista proveedores{c.END}\n")
-            print(f"Lista inicial: {self.lista_proveedores}")
-            print(f"\n{c.GREEN}[+]{c.END} {c.TURQUOISE}Creando proveedor...{c.END}\n")
-            #sleep(1)
             proveedor = {"id": self.id_proveedor, "nombre_proveedor": proveedor.nombre_proveedor}
             self.lista_proveedores.append(proveedor)
-            print(f"{c.GREEN}[+] Proveedor creado correctamente!{c.END} - {self.id_proveedor}\n")
+            print(f"{c.GREEN}[+] Proveedor creado{c.END} - {self.id_proveedor}\n")
             sleep(0.5)
 
-    def eliminar_proveedor(self, id_proveedor):
-        if id_proveedor == 0:
-            print(f"{c.RED}[!] El ID no puede ser 0!{c.END}")
+    def actualizar_proveedor(self, id_proveedor, nuevo_nombre):
+        posicion = self._buscar_posicion(id_proveedor)
+
+        if posicion != -1:
+            self.lista_proveedores[posicion]["nombre_proveedor"] = nuevo_nombre
+            print(f"{c.GREEN}[+] Proveedor actualizado{c.END}\n")
         else:
-            posicion = -1
+            print(f"{c.RED}[!] ERROR: Proveedor no encontrado.{c.END}\n")
 
-            # Obteniendo posición del objeto por el ID
-            for i in range(len(self.lista_proveedores)):
-                if self.lista_proveedores[i]["id"] == id_proveedor:
-                    posicion = i
-                    print(f"\n{c.GRAY}Posicion {c.GREEN}[{posicion}] {c.GRAY}guardada{c.END}\n")
-                    break
-            
-            # Eliminando el objeto si existe
-            if posicion != -1:
-                del self.lista_proveedores[posicion]
-                print(f"{c.GRAY}Eliminando proveedor...{c.END}\n")
-            else:
-                print(f"{c.RED}ID no existe{c.END}")                
+    def eliminar_proveedor(self, id_proveedor):
+        posicion = self._buscar_posicion(id_proveedor)
 
-    # Mostrar Total Proveedores
+        if id_proveedor == 0:
+            print(f"{c.RED}[!] Error: El ID no puede ser 0 !{c.END}")
+            return
+        
+        if posicion != -1:
+            del self.lista_proveedores[posicion]
+            print(f"{c.GRAY}[-] Proveedor eliminado.{c.END}\n")
+        else:
+            print(f"{c.RED}[!] ERROR: Proveedor no encontrado.{c.END}")
+
+    def buscar_por_id(self, id_proveedor):
+        posicion = self._buscar_posicion(id_proveedor)
+
+        if posicion != -1:
+            print(f"{c.GREEN}Proveedor encontrado: {self.lista_proveedores[posicion]["nombre_proveedor"]}{c.END}\n")
+        else:
+            print(f"{c.RED}[!] ERROR: Proveedor no existe.{c.END}\n")
+
     def total_proveedores(self):
-        print(f"Total Proveedores {len(self.lista_proveedores)}: {self.lista_proveedores}")
+        if (bool(self.lista_proveedores)):
+            print(f"Total Proveedores {len(self.lista_proveedores)}: {self.lista_proveedores}")
+        else:
+            print(f"{c.RED}\n[!] No hay proveedores.{c.END}")
 
 if __name__ == '__main__':
-    # Creación del objeto Gestor Proveedors
+    # * Creación del objeto Gestor Proveedors
     gestor_proveedores = GestorProveedores()
-    
-    proveedor_1 = Proveedor("Evercrisp") # Creación de los objetos (Proveedores)
-    gestor_proveedores.crear_proveedor(proveedor_1) # Gestor de Proveedores
-
-    proveedor_2 = Proveedor("Lays")
-    gestor_proveedores.crear_proveedor(proveedor_2)
-
-    proveedor_3 = Proveedor("Pepsico")
-    gestor_proveedores.crear_proveedor(proveedor_3)
+    # * Creación de los objetos (Proveedores)
+    proveedor_1 = Proveedor("Evercrisp")
+    # * CRUD Proveedores
+    gestor_proveedores.crear_proveedor(proveedor_1)
     gestor_proveedores.total_proveedores()
-
-    # Eliminra un producto por ID
+    gestor_proveedores.buscar_por_id(1)
+    gestor_proveedores.actualizar_proveedor(1, "Marco Polo")
+    gestor_proveedores.total_proveedores()
     gestor_proveedores.eliminar_proveedor(1)
     gestor_proveedores.total_proveedores()
-
-    gestor_proveedores.eliminar_proveedor(0)
-    gestor_proveedores.total_proveedores()
+    gestor_proveedores.buscar_por_id(1)
+    gestor_proveedores.actualizar_proveedor(1, "Lays")
