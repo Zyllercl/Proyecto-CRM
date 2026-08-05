@@ -1,4 +1,5 @@
 from colors import c
+from proveedores import GestorProveedores
 from menu_crud import SubMenu
 
 def menu():
@@ -10,6 +11,11 @@ def menu():
     
 def app():
     print(f"\n{c.YELLOW}Inicialización Aplicación CRM{c.END}\n")
+
+    # Inicialización de Gestores
+    proveedor = GestorProveedores() 
+
+    # Opción por defecto
     opcion = 0
 
     while opcion != 4:
@@ -22,7 +28,7 @@ def app():
             elif opcion == 2:
                 print(f"\n{c.GREEN}[!] Proximamente...{c.END}\n")
             elif opcion == 3:
-                SubMenu()
+                SubMenu.mostrar_submenu(proveedor)
                 opcion = 0 # * Se vuelve a mostrar el menú principal
             elif opcion == 4:
                 print(f"\n{c.RED}Finalizando programa...{c.END}")
