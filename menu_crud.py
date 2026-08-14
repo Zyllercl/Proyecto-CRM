@@ -21,13 +21,14 @@ class SubMenu():
                 if opcion == 1:
                     gestor.total_lista()
                 elif opcion == 2:
-                    print(f"{c.GREEN}[!] Proximamente...{c.END}")
+                    try:
+                        gestor.crear()
+                    except ValueError as e:
+                        print(f"{c.RED}[ERROR] SubMenu: {e}{c.END}")
                 elif opcion == 3:
                     print(f"{c.GREEN}[!] Proximamente...{c.END}")
                 elif opcion == 4:
-                    id = int(input("[PROV] Ingrese ID Prov: "))
-                    nuevo_nombre = input(f"[PROV] Nuevo nombre: ")
-                    gestor.actualizar(id, nuevo_nombre)
+                    gestor.actualizar()
                 elif opcion == 5:
                     print(f"{c.GREEN}[!] Proximamente...{c.END}")
                 elif opcion == 6:
