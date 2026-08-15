@@ -4,17 +4,15 @@ from base_crud import GestorCRUD, GestorDB
 
 class Proveedor:
     def __init__(self, nombre_proveedor):
-        self.nombre_proveedor = nombre_proveedor
+        nombre_proveedor = nombre_proveedor.strip()
+        if not nombre_proveedor:
+            raise ValueError("Nombre incorrecto!")        
+        else:
+            self.nombre_proveedor = nombre_proveedor
 
 class GestorProveedores(GestorCRUD, GestorDB):
-    # Variables Globales
-    id_proveedor = 1
-
     def __init__(self):
-        self.lista_proveedores = [
-            {"id": 1, "nombre_proveedor": "Test 1"},
-            {"id": 2, "nombre_proveedor": "Test 2"},
-        ]
+        self.lista_proveedores = []
 
     def _buscar_posicion(self, id):
         # * Obtener el indice de lista proveedores
@@ -23,24 +21,33 @@ class GestorProveedores(GestorCRUD, GestorDB):
                 return i
         return -1
 
-    # -----------------------
-    # * CRUD de Proveedores
-    # -----------------------
-    def crear(self, proveedor: Proveedor):
+    def _obtener_último_id(self):
         if bool(self.lista_proveedores):
             lista_invertida = self.lista_proveedores[::-1]
             ultimo_id = lista_invertida[0]["id"]
             ultimo_id += 1 # * Aumentando el valor de ID
+            return ultimo_id
+        else:
+            ultimo_id = 1
+            return ultimo_id
 
-            proveedor = {"id": ultimo_id, "nombre_proveedor": proveedor.nombre_proveedor}
-            self.lista_proveedores.append(proveedor)
-            print(f"{c.GREEN}[+] Proveedor creado{c.END} - {ultimo_id}\n")
-            sleep(0.5)
-        else: 
-            print(f"\n{c.GREEN}[+]{c.END} {c.GRAY}Inicializando lista proveedores{c.END}\n")
-            proveedor = {"id": self.id_proveedor, "nombre_proveedor": proveedor.nombre_proveedor}
-            self.lista_proveedores.append(proveedor)
-            print(f"{c.GREEN}[+] Proveedor creado{c.END} - {self.id_proveedor}\n")
+    def _crear_proveedor(self):
+        ultimo_id = self._obtener_último_id()
+        nombre_proveedor = input(f"Ingresar nombre proveedor: ")
+        proveedor = Proveedor(nombre_proveedor)
+        nuevo_proveedor = {"id": ultimo_id, "nombre_proveedor": proveedor.nombre_proveedor}
+        
+        return nuevo_proveedor
+    
+    # -----------------------
+    # * CRUD de Proveedores
+    # -----------------------
+    def crear(self):
+        nuevo_proveedor = self._crear_proveedor()
+
+        if nuevo_proveedor:
+            self.lista_proveedores.append(nuevo_proveedor)
+            print(f"{c.GREEN}[+] Proveedor creado{c.END}\n")
             sleep(0.5)
 
     def actualizar(self, id_proveedor, nuevo_nombre):
