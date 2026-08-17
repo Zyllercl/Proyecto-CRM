@@ -12,14 +12,16 @@ class Proveedor:
 
 class GestorProveedores(GestorCRUD, GestorDB):
     def __init__(self):
-        self.lista_proveedores = []
+        self.lista_proveedores = [
+            {"id": 1, "nombre_proveedor": "test 1"},
+        ]
 
-    def _buscar_posicion(self, id):
+    def _buscar_posicion(self, buscar_nombre):       
         # * Obtener el indice de lista proveedores
         for i in range(len(self.lista_proveedores)):
-            if self.lista_proveedores[i]["id"] == id:
+            if self.lista_proveedores[i]["nombre_proveedor"].strip().lower() == buscar_nombre.strip().lower():
                 return i
-        return -1
+        raise ValueError("Proveedor no existe!")
 
     def _obtener_último_id(self):
         if bool(self.lista_proveedores):
@@ -35,9 +37,20 @@ class GestorProveedores(GestorCRUD, GestorDB):
         ultimo_id = self._obtener_último_id()
         nombre_proveedor = input(f"Ingresar nombre proveedor: ")
         proveedor = Proveedor(nombre_proveedor)
-        nuevo_proveedor = {"id": ultimo_id, "nombre_proveedor": proveedor.nombre_proveedor}
-        
-        return nuevo_proveedor
+        existe_proveedor = self._existe_proveedor(proveedor.nombre_proveedor)
+
+        if existe_proveedor:
+            raise ValueError("El proveedor ya existe!")
+        else:
+            nuevo_proveedor = {"id": ultimo_id, "nombre_proveedor": proveedor.nombre_proveedor}
+            return nuevo_proveedor
+
+    def _existe_proveedor(self, nombre):
+        try:
+            self._buscar_posicion(nombre)
+            return True
+        except ValueError:
+            return False
     
     # -----------------------
     # * CRUD de Proveedores
@@ -50,14 +63,16 @@ class GestorProveedores(GestorCRUD, GestorDB):
             print(f"{c.GREEN}[+] Proveedor creado{c.END}\n")
             sleep(0.5)
 
-    def actualizar(self, id_proveedor, nuevo_nombre):
-        posicion = self._buscar_posicion(id_proveedor)
+    def actualizar(self):
+        self.total_lista()
+        buscar_proveedor = input(f"\n[UPDATE] Buscar proveedor: ")
+        buscar_posicion = self._buscar_posicion(buscar_proveedor)
 
-        if posicion != -1:
-            self.lista_proveedores[posicion]["nombre_proveedor"] = nuevo_nombre
-            print(f"{c.GREEN}[+] Proveedor actualizado{c.END}\n")
-        else:
-            print(f"{c.RED}[!] ERROR: Proveedor no encontrado.{c.END}\n")
+        nuevo_nombre = input("[UPDATE] Ingrese nuevo nombre: ")
+        proveedor_actualizado = Proveedor(nuevo_nombre)
+
+        self.lista_proveedores[buscar_posicion]["nombre_proveedor"] = proveedor_actualizado.nombre_proveedor
+        print(f"{c.GREEN}[+] Proveedor actualizado{c.END}")
 
     def eliminar(self, id_proveedor):
         posicion = self._buscar_posicion(id_proveedor)
