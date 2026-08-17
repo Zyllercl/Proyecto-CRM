@@ -28,7 +28,10 @@ class SubMenu():
                 elif opcion == 3:
                     print(f"{c.GREEN}[!] Proximamente...{c.END}")
                 elif opcion == 4:
-                    gestor.actualizar()
+                    try:
+                        gestor.actualizar()
+                    except ValueError as e:
+                        print(f"{c.RED}[ERROR] SubMenu: {e}{c.END}")
                 elif opcion == 5:
                     print(f"{c.GREEN}[!] Proximamente...{c.END}")
                 elif opcion == 6:
