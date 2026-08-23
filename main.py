@@ -1,13 +1,15 @@
 from colors import c
 from proveedores import GestorProveedores
 from menu_crud import SubMenu
+from utils import limpiar_pantalla
 
 def menu():
     print(f"{c.GRAY}Menú CRM{c.END}")
     print(f"{c.BLUE}1. Ventas")
     print(f"2. Inventario")
     print(f"3. Proveedores")
-    print(f"4. Salir{c.END}\n")
+    print(f"4. Salir")
+    print(f"0. Limpiar{c.END}\n")
     
 def app():
     print(f"\n{c.YELLOW}Inicialización Aplicación CRM{c.END}\n")
@@ -32,6 +34,8 @@ def app():
                 opcion = 0 # * Se vuelve a mostrar el menú principal
             elif opcion == 4:
                 print(f"\n{c.RED}Finalizando programa...{c.END}")
+            elif opcion == 0:
+                limpiar_pantalla()
             else:
                 print(f"\n{c.TURQUOISE}[!] Seleccione una opción válida...{c.END}\n")
         except ValueError:
