@@ -1,12 +1,11 @@
 from abc import ABC, abstractmethod
 
 class GestorCRUD(ABC):
+    def __init__(self, titulo=" - "):
+        self.titulo = titulo
+
     @abstractmethod
     def crear(self):
-        pass
-     
-    @abstractmethod
-    def leer(self):
         pass
 
     @abstractmethod
@@ -23,5 +22,5 @@ class GestorDB(ABC):
         pass
 
     @abstractmethod
-    def buscar_por_id(self):
+    def buscar(self):
         pass
