@@ -13,8 +13,12 @@ class Proveedor:
 class GestorProveedores(GestorCRUD, GestorDB):
     def __init__(self):
         self.lista_proveedores = [
-            {"id": 1, "nombre_proveedor": "test 1"},
+            {"id": 1, "nombre_proveedor": "Lays"},
+            {"id": 2, "nombre_proveedor": "Fruna"},
+            {"id": 3, "nombre_proveedor": "Evercrisp"},
+            {"id": 4, "nombre_proveedor": "San Jorge"},
         ]
+        super().__init__("Proveedores")
 
     def _buscar_posicion(self, buscar_nombre):       
         # * Obtener el indice de lista proveedores
@@ -35,7 +39,7 @@ class GestorProveedores(GestorCRUD, GestorDB):
 
     def _crear_proveedor(self):
         ultimo_id = self._obtener_último_id()
-        nombre_proveedor = input(f"Ingresar nombre proveedor: ")
+        nombre_proveedor = input(f"[CREATE] Ingresar nombre proveedor: ")
         proveedor = Proveedor(nombre_proveedor)
         existe_proveedor = self._existe_proveedor(proveedor.nombre_proveedor)
 
@@ -60,12 +64,12 @@ class GestorProveedores(GestorCRUD, GestorDB):
 
         if nuevo_proveedor:
             self.lista_proveedores.append(nuevo_proveedor)
-            print(f"{c.GREEN}[+] Proveedor creado{c.END}\n")
+            print(f"{c.GREEN}[+] Proveedor creado{c.END}")
             sleep(0.5)
 
     def actualizar(self):
         self.total_lista()
-        buscar_proveedor = input(f"\n[UPDATE] Buscar proveedor: ")
+        buscar_proveedor = input(f"\n[UPDATE] Ingrese proveedor: ")
         buscar_posicion = self._buscar_posicion(buscar_proveedor)
 
         nuevo_nombre = input("[UPDATE] Ingrese nuevo nombre: ")
@@ -74,29 +78,19 @@ class GestorProveedores(GestorCRUD, GestorDB):
         self.lista_proveedores[buscar_posicion]["nombre_proveedor"] = proveedor_actualizado.nombre_proveedor
         print(f"{c.GREEN}[+] Proveedor actualizado{c.END}")
 
-    def eliminar(self, id_proveedor):
-        posicion = self._buscar_posicion(id_proveedor)
+    def eliminar(self):
+        self.total_lista()
+        buscar_proveedor = input(f"\n[DELETE] Ingrese proveedor: ")
+        posicion = self._buscar_posicion(buscar_proveedor)
 
-        if id_proveedor == 0:
-            print(f"{c.RED}[!] Error: El ID no puede ser 0 !{c.END}")
-            return
-        
-        if posicion != -1:
-            del self.lista_proveedores[posicion]
-            print(f"{c.GRAY}[-] Proveedor eliminado.{c.END}\n")
-        else:
-            print(f"{c.RED}[!] ERROR: Proveedor no encontrado.{c.END}")
+        del self.lista_proveedores[posicion]
+        print(f"[DELETE] Proveedor eliminado con éxito!")
+    
+    def buscar(self):
+        buscar_proveedor = input(f"\n[SEARCH] Buscar proveedor: ")
+        posicion = self._buscar_posicion(buscar_proveedor)
 
-    def leer(self):
-        pass
-
-    def buscar_por_id(self, id_proveedor):
-        posicion = self._buscar_posicion(id_proveedor)
-
-        if posicion != -1:
-            print(f"{c.GREEN}Proveedor encontrado: {self.lista_proveedores[posicion]["nombre_proveedor"]}{c.END}\n")
-        else:
-            print(f"{c.RED}[!] ERROR: Proveedor no existe.{c.END}\n")
+        print(f"[INFO] Nombre: {self.lista_proveedores[posicion]["nombre_proveedor"]}\n")
 
     def total_lista(self):
         if (bool(self.lista_proveedores)):
